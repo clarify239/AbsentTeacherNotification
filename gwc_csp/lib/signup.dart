@@ -4,8 +4,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gwc_csp/helper.dart';
 import 'package:gwc_csp/home_page.dart';
 import 'package:gwc_csp/login.dart';
+import 'package:gwc_csp/teachers_signup.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -26,14 +28,14 @@ class _SignupState extends State<Signup> {
         password: passwordController.text,
     ).then((value) async {
       print("Signed up user");
-      await FirebaseDatabase.instance.ref().child("Users").child(studentID.text).set({
+      await FirebaseDatabase.instance.ref().child("Users").child(getUID()).update({
         "name": nameController.text,
         "id": studentID.text,
       }).then((value) {
         print("Set up profile info");
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => TeachersSignup()),
         );
       }).catchError((error) {
         print("could not set up user info " + error.toString());
@@ -141,6 +143,28 @@ class _SignupState extends State<Signup> {
             Container(
               height: 20,
             ),
+            Container(
+              height: 55,
+              padding: EdgeInsets.only(left: 15.0, right: 15.0),
+              child: CupertinoTextField(
+                controller: studentID,
+                placeholder: "Student ID",
+                placeholderStyle: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Color.fromRGBO(180, 180, 180, 1)
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(245, 245, 245, 1),
+                  borderRadius: BorderRadius.circular(10.0),
+                  border: Border.all(
+                    color: Color.fromRGBO(150, 150, 150, 1),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               child: GestureDetector(
@@ -151,10 +175,16 @@ class _SignupState extends State<Signup> {
                     color: Color.fromRGBO(160, 201, 165, 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: Center(child: Text("Signup")),
+                  child: Center(child: Text("Next")),
                 ),
                 onTap: () async {
                   await signup();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     //builder: (context) => TeachersSignup(email: emailController.text, name: nameController.text, password: passwordController.text, ID: studentID.text),
+                  //     builder: (context) => TeachersSignup(),
+                  //   ),
+                  // );
                 },
               ),
             ),
